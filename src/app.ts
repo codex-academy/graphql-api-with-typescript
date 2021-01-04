@@ -1,29 +1,28 @@
 
 import express from "express";
 import { ApolloServer, gql } from "apollo-server-express";
+import Resolvers from "./Resolvers";
+import GreetService from "./GreetService";
 
 
 const typeDefs = gql`
 	type Query {
-		hello : String!,
-		bye (name: String) : String!
+		hello(name : String) : String!,
+		greeted (name: String) : String
 	}
+
 `;
 
-const resolvers = {
-		Query : {
-			hello : function() {
-				return "Hello, world!"
-			},
-			bye : function(_, params) {
-				return "Bye, " + params['name'] + "!"
-			}
-		}
-	};
+const greetService = new  GreetService();
+
+const resolvers = Resolvers(greetService);
 
 const apolloServer = new ApolloServer({
 	typeDefs,
-	resolvers
+	resolvers,
+	context : function() {
+		// console.log("...");
+	}
 });
 
 const app = express();
