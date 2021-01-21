@@ -1,13 +1,18 @@
 import { assertAbstractType } from "graphql";
 
 import * as assert from "assert";
+import Resolvers, { IResolver } from "../src/Resolvers";
+import GreetServiceImpl from "../src/greet/GreetServiceImpl";
+import typeDefs from "../src/type-defs";
 import apolloServer from "../src/ApolloServer";
-
 const { createTestClient } = require('apollo-server-testing');
+
+const resolvers = Resolvers(new GreetServiceImpl());
+const server = apolloServer(typeDefs, resolvers);
 
 describe("The first test", function() {
 
-	const { query } = createTestClient(apolloServer);
+	const { query } = createTestClient(server);
 
 	it("should say hello to Elsa", async function() {
 

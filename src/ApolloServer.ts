@@ -1,16 +1,15 @@
-import { ApolloServer} from "apollo-server-express";
-import Resolvers from "./Resolvers";
-import GreetService from "./GreetService";
-import typeDefs from "./type-defs";
+import { ApolloServer, IResolvers} from "apollo-server-express";
+import { DocumentNode } from "graphql";
 
-const greetService = new  GreetService();
-const resolvers = Resolvers(greetService);
+export default  function  (typeDefs : DocumentNode, resolvers: IResolvers) {
 
-const apolloServer = new ApolloServer({
-	typeDefs,
-	resolvers,
-	context : function() {
-	}
-});
+	const apolloServer = new ApolloServer({
+		typeDefs,
+		resolvers,
+		context : function() {
+		}
+	});
+	
+	return apolloServer;
 
-export default apolloServer;
+}

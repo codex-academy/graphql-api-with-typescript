@@ -1,25 +1,32 @@
-import GreetService from "./GreetService";
+import GreetService from "./greet/GreetService";
 
 interface NameValue {
 	name : string
 }
-
 interface None {
 
 }
+export interface IQuery {
+	hello (_: None, params: NameValue) : Promise<string>
+	greeted (_: None, params: NameValue): Promise<string>
 
-export default function Resolvers(greetService: GreetService) {
+}
+export  interface IResolver {
+	Query :IQuery
+}
+
+export default function Resolvers(greetService: GreetService) : IResolver {
 	return {
 		Query: {
-			hello: function (_: None, params: NameValue) {
+			hello: async function (_: None, params: NameValue) {
 
-				greetService.greet(params.name);
+				await greetService.greet(params.name);
 
 				return `Hello, ${params.name}!`;
 			},
-			greeted: function (_: None, params: NameValue): string {
+			greeted: async function (_: None, params: NameValue): Promise<string> {
 
-				const qty = greetService.greeted(params.name);
+				const qty = await greetService.greeted(params.name);
 
 				if (!qty) {
 					return "Nope!";

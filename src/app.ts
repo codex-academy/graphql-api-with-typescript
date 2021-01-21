@@ -1,10 +1,22 @@
-
 import express from "express";
 import apolloServer from "./ApolloServer";
+import Resolvers, { IResolver } from "./Resolvers";
+import GreetServicePostgres from "./greet/GreetServicePostgres";
+import {Pool} from "pg";
+import typeDefs from "./type-defs";
 
 const app = express();
+const connectionString = process.env.DATABASE_URL || 'postgresql://localhost:5432/greet-graphql';
 
-apolloServer.applyMiddleware({
+const pool = new Pool({
+	connectionString
+});
+
+const greetService = new  GreetServicePostgres(pool);
+const resolvers = Resolvers(greetService);
+const server = apolloServer(typeDefs, resolvers);
+
+server.applyMiddleware({
 	app
 });
 
