@@ -1,29 +1,6 @@
 
 import express from "express";
-import { ApolloServer, gql } from "apollo-server-express";
-import Resolvers from "./Resolvers";
-import GreetService from "./GreetService";
-
-
-const typeDefs = gql`
-	type Query {
-		hello(name : String) : String!,
-		greeted (name: String) : String
-	}
-
-`;
-
-const greetService = new  GreetService();
-
-const resolvers = Resolvers(greetService);
-
-const apolloServer = new ApolloServer({
-	typeDefs,
-	resolvers,
-	context : function() {
-		// console.log("...");
-	}
-});
+import apolloServer from "./ApolloServer";
 
 const app = express();
 
